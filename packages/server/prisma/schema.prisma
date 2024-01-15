@@ -19,6 +19,7 @@ model User {
   tasks        Task[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  Cart         Cart[]
 }
 
 model Profile {
@@ -61,4 +62,34 @@ model Task {
 enum TaskType {
   test
   other
+}
+
+model Product {
+  id       Int    @id @default(autoincrement())
+  price    Int
+  imageUrl String
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  createdAt DateTime   @default(now())
+  items     CartItem[]
+}
+
+model CartItem {
+  id              Int            @id @default(autoincrement())
+  cart            Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId          Int
+  productId       Int
+  productPrice    Int
+  productImageUrl String
+  status          CartItemStatus
+  createdAt       DateTime       @default(now())
+}
+
+enum CartItemStatus {
+  added
+  removed
 }
