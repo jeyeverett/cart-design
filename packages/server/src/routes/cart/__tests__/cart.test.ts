@@ -22,6 +22,7 @@ describe('cart', () => {
     expect(body).toEqual(
       expect.objectContaining({
         cart: {
+          id: 1,
           items: [
             expect.objectContaining({
               id: 1,
@@ -61,6 +62,7 @@ describe('cart', () => {
     expect(checkResponse.body).toEqual(
       expect.objectContaining({
         cart: {
+          id: 1,
           items: [
             expect.objectContaining({
               id: 1,

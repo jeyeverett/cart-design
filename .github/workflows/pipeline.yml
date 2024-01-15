@@ -48,12 +48,7 @@ jobs:
         run: |
           npm run prisma:reset:force
 
-      - name: Start Node.js server
+      - name: Start server and test
         working-directory: ./packages/server
         run: |
           npm run start:ci
-
-      - name: Run tests
-        working-directory: ./packages/server
-        run: |
-          npm run test
