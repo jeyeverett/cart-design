@@ -16,4 +16,27 @@ model User {
   accessToken  String   @db.VarChar(24)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  profile      Profile?
+  posts        Post[]
+}
+
+model Profile {
+  id       Int     @id @default(autoincrement())
+  imageUrl String?
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   Int     @unique
+}
+
+model Post {
+  id         Int        @id @default(autoincrement())
+  title      String
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  categories Category[]
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  type  String
+  posts Post[]
 }

@@ -1,5 +1,7 @@
+import _ from 'lodash';
 import { getAccessToken, hashPassword } from './security';
 import prisma from '@utils/prisma';
+import handleError from '@utils/error';
 
 export const createUser = async ({
   email,
@@ -20,18 +22,37 @@ export const createUser = async ({
         email,
         name,
         passwordHash,
+        // profile: {
+        //   create: {},
+        // },
+        // posts: {
+        //   create: {
+        //     title: 'Test post.',
+        //     categories: {
+        //       connect: {
+        //         id: 1,
+        //       },
+        //     },
+        //   },
+        // },
       },
     });
     return { user };
   } catch (err) {
-    return {
-      errors: [
-        {
-          message: 'A user with this email already exists.',
-          path: 'email',
-        },
-      ],
-    };
+    const code = _.get(err, 'code');
+    if (code === 'P2002') {
+      return {
+        errors: [
+          {
+            message: 'A user with this email already exists.',
+            path: 'email',
+          },
+        ],
+      };
+    }
+
+    handleError(err);
+    return { user: null };
   }
 };
 
@@ -41,11 +62,23 @@ export const getUsers = async () => {
 };
 
 export const getUserById = async ({ id }: { id: number }) => {
-  const user = await prisma.user.findUnique({ where: { id } });
+  const user = await prisma.user.findUnique({
+    where: { id },
+    include: {
+      profile: true,
+      posts: {
+        include: {
+          categories: true,
+        },
+      },
+    },
+  });
   return { user };
 };
 
 export const deleteUserById = async ({ id }: { id: number }) => {
-  const user = await prisma.user.delete({ where: { id } });
+  const user = await prisma.user.delete({
+    where: { id },
+  });
   return { user };
 };

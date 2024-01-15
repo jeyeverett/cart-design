@@ -5,6 +5,8 @@ const baseUrl = 'http://localhost:8080';
 
 describe('GET /users/:id', () => {
   it('gets user for a valid id', async () => {
+    const id = 1;
+    const email = 'jest-get-test-user@test.com';
     const response = await request(baseUrl).get('/users/1'); //?
     const { body, statusCode } = response; //?
     expect(statusCode).toBe(200);
@@ -12,7 +14,7 @@ describe('GET /users/:id', () => {
       expect.objectContaining({
         status: ResponseStatus.success,
         data: {
-          user: expect.objectContaining({ id: 1, email: 'test@test.com' }),
+          user: expect.objectContaining({ id, email }),
         },
       })
     );
