@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { getAccessToken, hashPassword } from './security';
+import { getAccessToken, hashPassword } from '@services/security';
 import prisma from '@utils/prisma';
 import handleError from '@utils/error';
 
@@ -38,8 +38,8 @@ export const createUser = async ({
       },
     });
     return { user };
-  } catch (err) {
-    const code = _.get(err, 'code');
+  } catch (e) {
+    const code = _.get(e, 'code');
     if (code === 'P2002') {
       return {
         errors: [
@@ -51,8 +51,7 @@ export const createUser = async ({
       };
     }
 
-    handleError(err);
-    return { user: null };
+    throw e;
   }
 };
 

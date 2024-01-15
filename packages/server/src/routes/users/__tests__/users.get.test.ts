@@ -1,7 +1,7 @@
 import request from 'supertest';
 import ResponseStatus from '@constants/status';
 
-const baseUrl = 'http://localhost:8080';
+const baseUrl = process.env.BASE_URL as string;
 
 describe('GET /users/:id', () => {
   it('gets user for a valid id', async () => {

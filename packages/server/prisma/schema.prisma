@@ -14,17 +14,20 @@ model User {
   name         String?
   passwordHash String
   accessToken  String   @db.VarChar(24)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
   profile      Profile?
   posts        Post[]
+  tasks        Task[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Profile {
-  id       Int     @id @default(autoincrement())
-  imageUrl String?
-  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId   Int     @unique
+  id        Int      @id @default(autoincrement())
+  imageUrl  String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int      @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Post {
@@ -33,10 +36,29 @@ model Post {
   user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
   categories Category[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
 model Category {
-  id    Int    @id @default(autoincrement())
-  type  String
-  posts Post[]
+  id        Int      @id @default(autoincrement())
+  type      String
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  type        TaskType?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum TaskType {
+  test
+  other
 }

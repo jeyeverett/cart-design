@@ -9,4 +9,9 @@ module.exports = {
     '\\@src/(.*)$': '<rootDir>/src/$1',
     '\\@utils/(.*)$': '<rootDir>/src/utils/$1',
   },
+  setupFiles: ['dotenv/config'],
+  modulePathIgnorePatterns: [
+    '<rootDir>/src/routes/tasks/',
+    '<rootDir>/src/routes/users/',
+  ],
 };

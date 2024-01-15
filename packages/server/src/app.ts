@@ -4,6 +4,7 @@ import bodyParser from 'koa-bodyparser';
 import handleError from '@utils/error';
 import router from '@routes/index';
 import usersRouter from '@routes/users';
+import tasksRouter from '@routes/tasks';
 import { authenticateUser } from '@services/security';
 
 let app: Koa.DefaultState;
@@ -52,6 +53,9 @@ const getApp = async () => {
 
   app.use(usersRouter.routes());
   app.use(usersRouter.allowedMethods());
+
+  app.use(tasksRouter.routes());
+  app.use(tasksRouter.allowedMethods());
 
   return app;
 };
