@@ -34,6 +34,10 @@ jobs:
         with:
           node-version: '18.17.0'
 
+      - name: Set up MySQL
+        run: |
+          bash ./scripts/dbSetup.sh
+
       - name: Install dependencies
         working-directory: ./packages/server
         run: |
