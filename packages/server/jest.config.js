@@ -10,4 +10,6 @@ module.exports = {
     '\\@utils/(.*)$': '<rootDir>/src/utils/$1',
   },
   setupFiles: ['dotenv/config'],
+  globalSetup: './src/jest/global-setup.js',
+  globalTeardown: './src/jest/global-teardown.js',
 };
