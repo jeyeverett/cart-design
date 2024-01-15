@@ -8,7 +8,8 @@
     "test": "jest --passWithNoTests",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:seed": "npx prisma db seed",
-    "prisma:reset": "npx prisma migrate reset"
+    "prisma:reset": "npx prisma migrate reset",
+    "prisma:reset:force": "npx prisma migrate reset --force"
   },
   "keywords": [],
   "author": "",

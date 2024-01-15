@@ -46,7 +46,7 @@ jobs:
       - name: Start MySQL
         working-directory: ./packages/server
         run: |
-          npm run prisma:reset
+          npm run prisma:reset:force
 
       - name: Start Node.js server
         working-directory: ./packages/server
