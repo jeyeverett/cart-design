@@ -51,7 +51,7 @@ jobs:
       - name: Start Node.js server
         working-directory: ./packages/server
         run: |
-          npm run start
+          npm run start:ci
 
       - name: Run tests
         working-directory: ./packages/server

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --watch 'src/**/*' --ext js,ts --exec 'ts-node' --transpile-only ./src/index.ts",
+    "start:ci": "ts-node --transpile-only ./src/index.ts",
     "test": "jest --passWithNoTests",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:seed": "npx prisma db seed",
