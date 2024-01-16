@@ -1,9 +1,21 @@
 import _ from 'lodash';
-import { CartItem, CartItemStatus } from '@prisma/client';
+import { CartItemStatus } from '@prisma/client';
 
-// take the items from a users cart and return the most recent one for each product IF status === "added"
-const getCartItems = ({ items }: { items: CartItem[] }) => {
-  const sortedItems = _.sortBy(items, 'createdAt');
+export type Cart = {
+  id: number;
+  items: {
+    id: number;
+    cartId: number;
+    productId: number;
+    productPrice: number;
+    productImageUrl: string;
+    status: CartItemStatus;
+    createdAt: Date;
+  }[];
+} | null;
+
+const getCartItems = ({ cart }: { cart: Cart }) => {
+  const sortedItems = _.sortBy(cart?.items, 'createdAt');
   const itemsByProduct = _.groupBy(sortedItems, 'productId');
 
   const cartItems = [];

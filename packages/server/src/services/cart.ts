@@ -17,8 +17,7 @@ export const getCart = async ({ date, id }: { date?: Date; id: number }) => {
 
   if (!cart) return { cart };
 
-  const { items } = cart;
-  const { cartItems } = getCartItems({ items });
+  const { cartItems } = getCartItems({ cart });
   return { cart: { id: cart.id, items: cartItems } };
 };
 
@@ -37,10 +36,8 @@ export const addToCart = async ({
     where: { cartId, productId, productPrice, productImageUrl },
   });
 
-  if (existing) {
-    // update quantity? just return for now
-    return { cartItem: existing };
-  }
+  // assuming you can't add the same item to the cart more than once
+  if (existing) return { cartItem: existing };
 
   const cartItem = await prisma.cartItem.create({
     data: {
@@ -51,6 +48,7 @@ export const addToCart = async ({
       status: CartItemStatus.added,
     },
   });
+
   return { cartItem };
 };
 
@@ -63,20 +61,20 @@ export const deleteFromCart = async ({
     where: { id: cartItemId },
   });
 
-  if (!existingItem || existingItem.status === CartItemStatus.removed) {
-    return { cartItem: existingItem };
+  if (existingItem && existingItem.status === CartItemStatus.added) {
+    const { cartId, productId, productPrice, productImageUrl } = existingItem;
+    const cartItem = await prisma.cartItem.create({
+      data: {
+        cartId,
+        productId,
+        productPrice,
+        productImageUrl,
+        status: CartItemStatus.removed,
+      },
+    });
+
+    return { cartItem };
   }
 
-  const { cartId, productId, productPrice, productImageUrl } = existingItem;
-  const cartItem = await prisma.cartItem.create({
-    data: {
-      cartId,
-      productId,
-      productPrice,
-      productImageUrl,
-      status: CartItemStatus.removed,
-    },
-  });
-
-  return { cartItem };
+  return { cartItem: existingItem };
 };
