@@ -34,10 +34,13 @@ export const addToCart = async ({
   productImageUrl: string;
 }) => {
   const existing = await prisma.cartItem.findFirst({
-    where: { cartId, productId },
+    where: { cartId, productId, productPrice, productImageUrl },
   });
 
-  if (existing) return { cartItem: existing };
+  if (existing) {
+    // update quantity? just return for now
+    return { cartItem: existing };
+  }
 
   const cartItem = await prisma.cartItem.create({
     data: {

@@ -48,27 +48,6 @@ async function main() {
       status: 'added',
     },
   });
-
-  // await prisma.user.upsert({
-  //   where: { email: 'jest-task-test-user@test.com' },
-  //   update: {},
-  //   create: {
-  //     id: 2,
-  //     email: 'jest-task-test-user@test.com',
-  //     passwordHash:
-  //       '$2b$12$4PwA75s4DQcC2pPKWjmZi.HAqh6hRn7NH7kIo5cUqkZgF9g3nmI4e',
-  //     accessToken: 'accessToken',
-  //   },
-  // });
-  // await prisma.task.upsert({
-  //   where: { id: 1 },
-  //   update: {},
-  //   create: {
-  //     id: 1,
-  //     type: 'other',
-  //     userId: 2,
-  //   },
-  // });
 }
 
 main()

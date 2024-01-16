@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --watch 'src/**/*' --ext js,ts --exec 'ts-node' --transpile-only ./src/index.ts",
     "start:ci": "ts-node --transpile-only ./src/index.ts & npm run test",
-    "test": "jest --passWithNoTests",
+    "test": "yarn run prisma:reset:force && jest",
     "test:ci": "STAGE=test jest",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:seed": "npx prisma db seed",
@@ -20,21 +20,17 @@
     "@prisma/client": "^5.8.0",
     "@types/koa": "^2.14.0",
     "@types/koa-router": "^7.4.8",
-    "bcrypt": "^5.1.1",
     "dayjs": "^1.11.10",
     "dotenv": "^16.3.1",
     "koa": "^2.15.0",
     "koa-bodyparser": "^4.4.1",
     "koa-morgan": "^1.0.1",
     "koa-router": "^12.0.1",
-    "koa-zod-router": "^2.2.0",
     "lodash": "^4.17.21",
     "prisma": "^5.8.0",
-    "winston": "^3.11.0",
-    "zod": "^3.22.4"
+    "winston": "^3.11.0"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
     "@types/jest": "^29.5.11",
     "@types/koa-bodyparser": "^4.3.12",
     "@types/koa-morgan": "^1.0.8",
