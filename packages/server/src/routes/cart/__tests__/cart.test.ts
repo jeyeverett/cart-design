@@ -32,6 +32,13 @@ describe('cart', () => {
   it('works', async () => {
     const beforeCreateAndDeleteDate = new Date();
 
+    // try adding same item twice (should only add once)
+    await request(baseUrl).post('/cart').send({
+      cartId: 1,
+      productId: 3,
+      productPrice: 10,
+      productImageUrl: 'test-url-3',
+    });
     await request(baseUrl).post('/cart').send({
       cartId: 1,
       productId: 3,
@@ -54,7 +61,10 @@ describe('cart', () => {
     expect(_.some(itemsB, (item) => item.productId === 1)).toBe(false);
     expect(itemsB).toEqual(expect.arrayContaining([cartItem2, cartItem3]));
 
-    const responseC = await getCart({ cartId: 1, date: beforeCreateAndDeleteDate });
+    const responseC = await getCart({
+      cartId: 1,
+      date: beforeCreateAndDeleteDate,
+    });
     const itemsC = responseC.body.cart.items;
     // cartItem1 should be present since "now" is before it was deleted
     // cartItem3 should not be present since "now" is before it was created

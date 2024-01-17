@@ -34,10 +34,14 @@ export const addToCart = async ({
 }) => {
   const existing = await prisma.cartItem.findFirst({
     where: { cartId, productId, productPrice, productImageUrl },
+    orderBy: {
+      createdAt: 'desc',
+    },
   });
 
-  // assuming you can't add the same item to the cart more than once
-  if (existing) return { cartItem: existing };
+  if (existing && existing.status === CartItemStatus.added) {
+    return { cartItem: existing };
+  }
 
   const cartItem = await prisma.cartItem.create({
     data: {
