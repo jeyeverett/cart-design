@@ -1,7 +1,8 @@
 import _ from 'lodash';
+import { CartItem, CartItemStatus } from '@prisma/client';
 import prisma from '@utils/prisma';
 import getCartItems from '@lib/getCartItems';
-import { CartItemStatus } from '@prisma/client';
+import { getProduct } from '@services/product';
 
 export const getCart = async ({ date, id }: { date?: Date; id: number }) => {
   const itemsWhere = date ? { createdAt: { lte: date } } : {};
@@ -21,19 +22,9 @@ export const getCart = async ({ date, id }: { date?: Date; id: number }) => {
   return { cart: { id: cart.id, items: cartItems } };
 };
 
-export const addToCart = async ({
-  cartId,
-  productId,
-  productPrice,
-  productImageUrl,
-}: {
-  cartId: number;
-  productId: number;
-  productPrice: number;
-  productImageUrl: string;
-}) => {
+export const addToCart = async ({ cartId, productId }: Partial<CartItem>) => {
   const existing = await prisma.cartItem.findFirst({
-    where: { cartId, productId, productPrice, productImageUrl },
+    where: { cartId, productId },
     orderBy: {
       createdAt: 'desc',
     },
@@ -43,12 +34,18 @@ export const addToCart = async ({
     return { cartItem: existing };
   }
 
+  const product = getProduct({ id: Number(productId) });
+
+  if (!product) {
+    throw new Error(`Product with id ${productId} not found`);
+  }
+
   const cartItem = await prisma.cartItem.create({
     data: {
-      cartId,
-      productId,
-      productPrice,
-      productImageUrl,
+      cartId: Number(cartId),
+      productId: product.id,
+      productPrice: product.price,
+      productImageUrl: product.imageUrl,
       status: CartItemStatus.added,
     },
   });
@@ -57,28 +54,35 @@ export const addToCart = async ({
 };
 
 export const deleteFromCart = async ({
-  cartItemId,
-}: {
-  cartItemId: number;
-}) => {
-  const existingItem = await prisma.cartItem.findUnique({
-    where: { id: cartItemId },
+  cartId,
+  productId,
+}: Partial<CartItem>) => {
+  const existing = await prisma.cartItem.findFirst({
+    where: { cartId, productId },
+    orderBy: {
+      createdAt: 'desc',
+    },
   });
 
-  if (existingItem && existingItem.status === CartItemStatus.added) {
-    const { cartId, productId, productPrice, productImageUrl } = existingItem;
-    const cartItem = await prisma.cartItem.create({
-      data: {
-        cartId,
-        productId,
-        productPrice,
-        productImageUrl,
-        status: CartItemStatus.removed,
-      },
-    });
-
-    return { cartItem };
+  if (existing && existing.status === CartItemStatus.removed) {
+    return { cartItem: existing };
   }
 
-  return { cartItem: existingItem };
+  const product = getProduct({ id: Number(productId) });
+
+  if (!product) {
+    throw new Error(`Product with id ${productId} not found`);
+  }
+
+  const cartItem = await prisma.cartItem.create({
+    data: {
+      cartId: Number(cartId),
+      productId: product.id,
+      productPrice: product.price,
+      productImageUrl: product.imageUrl,
+      status: CartItemStatus.removed,
+    },
+  });
+
+  return { cartItem };
 };

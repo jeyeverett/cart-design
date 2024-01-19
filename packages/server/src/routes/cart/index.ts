@@ -13,21 +13,20 @@ router.get('/cart/:id', async (ctx) => {
 });
 
 router.post('/cart', async (ctx) => {
-  const { cartId, productId, productPrice, productImageUrl } = ctx.request.body;
+  const { cartId, productId } = ctx.request.body;
   const { cartItem } = await addToCart({
     cartId,
     productId,
-    productPrice,
-    productImageUrl,
   });
 
   ctx.body = cartItem;
 });
 
 router.delete('/cart', async (ctx) => {
-  const { cartItemId } = ctx.request.body;
+  const { cartId, productId } = ctx.request.body;
   const { cartItem } = await deleteFromCart({
-    cartItemId,
+    cartId,
+    productId,
   });
 
   ctx.body = cartItem;

@@ -36,14 +36,10 @@ describe('cart', () => {
     await request(baseUrl).post('/cart').send({
       cartId: 1,
       productId: 3,
-      productPrice: 10,
-      productImageUrl: 'test-url-3',
     });
     await request(baseUrl).post('/cart').send({
       cartId: 1,
       productId: 3,
-      productPrice: 10,
-      productImageUrl: 'test-url-3',
     });
 
     const responseA = await getCart({ cartId: 1 });
@@ -52,7 +48,10 @@ describe('cart', () => {
       expect.arrayContaining([cartItem1, cartItem2, cartItem3])
     );
 
-    await request(baseUrl).delete('/cart').send({ cartItemId: 1 });
+    await request(baseUrl).delete('/cart').send({
+      cartId: 1,
+      productId: 1,
+    });
 
     const responseB = await getCart({ cartId: 1 });
     const itemsB = responseB.body.cart.items; //?
